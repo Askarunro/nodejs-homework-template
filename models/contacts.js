@@ -19,10 +19,11 @@ const removeContact = async (contactId) => {
   const indexContactById = allContacts.findIndex(
     (contact) => contact.id === contactId
   );
-  if (indexContactById !== -1) {
+  if (indexContactById >= 0) {
     allContacts.splice(indexContactById, 1);
-    return fs.writeFile(contactsPath, JSON.stringify(allContacts));
-  } else return undefined
+    fs.writeFile(contactsPath, JSON.stringify(allContacts));
+    return allContacts;
+  }
 };
 
 const addContact = async (body) => {
@@ -42,11 +43,13 @@ const updateContact = async (contactId, body) => {
     (contact) => contact.id === contactId
   );
   const contactById = allContacts.find((contact) => contact.id === contactId);
-  const renewContact = { ...contactById, ...body };
-  allContacts.splice(indexContactById, 1, renewContact);
-  fs.writeFile(contactsPath, JSON.stringify(allContacts));
-
-  return;
+  if (indexContactById >= 0) {
+    const renewContact = { ...contactById, ...body };
+    allContacts.splice(indexContactById, 1, renewContact);
+    fs.writeFile(contactsPath, JSON.stringify(allContacts));
+    return renewContact;
+  }
+  else return undefined;
 };
 
 module.exports = {
