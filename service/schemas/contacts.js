@@ -27,6 +27,10 @@ const contacts = new Schema({
     type: Boolean,
     default: false,
   },
+  // owner: {
+  //   type: SchemaTypes.ObjectId,
+  //   ref: 'user',
+  // }
 });
 
 const Contacts = model("contacts", contacts);
