@@ -3,7 +3,7 @@ const logger = require('morgan')
 const cors = require('cors')
 
 const contactsRouter = require('./api')
-const authRouter = require('./api/')
+const authRouter = require('./api/auth')
 
 const app = express()
 
@@ -15,7 +15,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/v1/contacts", contactsRouter);
-app.use("/api/auth", authRouter);
+app.use("/api/users", authRouter);
 
 app.use((_, res, __) => {
   res.status(404).json({
@@ -26,14 +26,19 @@ app.use((_, res, __) => {
   })
 })
 
-app.use((err, _, res, __) => {
-  console.log(err.stack)
-  res.status(500).json({
-    status: 'fail',
-    code: 500,
-    message: err.message,
-    data: 'Internal Server Error',
-  })
-})
+// app.use((err, req, res, next) => {
+//   // console.log(err.stack)
+//   res.status(500).json({
+//     status: 'fail',
+//     code: 500,
+//     message: err.message,
+//     data: 'Internal Server Error',
+//   })
+// })
 
+
+app.use((err, req, res, next) => {
+  const { status = 500, message = "Internal Server Error" } = err;
+  res.status(status).json({message});
+});
 module.exports = app
