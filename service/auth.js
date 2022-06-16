@@ -46,13 +46,8 @@ const authenticateUser = async (token) => {
 };
 
 const logout = async (id) => {
-  try {
-    const user = await Users.findByIdAndUpdate(id, {token:null});
-
-  } catch (e) {
-    return null;
-  }
-};
+  await Users.findByIdAndUpdate(id, {token: null})
+}
 
 const current = async (contactId, fields) => {
   return Users.findByIdAndUpdate({ _id: contactId }, fields, { new: true });
