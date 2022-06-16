@@ -1,9 +1,9 @@
 const {Schema, model} = require('mongoose');
 const Joi = require("joi");
 
-const schemaUsers = Joi.object({
-    password: Joi.string().min(3).max(30),
-    email: Joi.string().email(),
+const schemaRegister = Joi.object({
+    password: Joi.string().min(3).max(30).required(),
+    email: Joi.string().email().required(),
     subscription: Joi.string().min(3).max(8),
   });
 
@@ -27,4 +27,4 @@ const users = new Schema({
 
   const Users = model("users", users);
 
-module.exports = {Users, schemaUsers};
+module.exports = {Users, schemaRegister};
