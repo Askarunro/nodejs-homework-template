@@ -1,4 +1,3 @@
-const { createError } = require("../helpers/errors");
 const { authenticateUser } = require("../service/auth");
 const authError = { status: 401, message: "Not authorized" };
 
