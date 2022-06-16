@@ -2,7 +2,7 @@ const { Users } = require("./schemas/users");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = require("..//helpers/env");
-const { createError } = require("../helpers/errors");
+const { ValidationError } = require("../helpers/errors");
 
 const registration = async (email, password) => {
   const result = await Users.findOne({ email: email });
@@ -18,11 +18,11 @@ const registration = async (email, password) => {
 const login = async ({ email, password }) => {
   const user = await Users.findOne({ email: email });
   if (!user) {
-    throw createError(401, "Email or password is wrong");
+    throw new ValidationError(401, 'Email or password is wrong');
   }
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) {
-    throw createError(401, "Email or password is wrong");
+    throw new ValidationError(401, 'Email or password is wrong');
   }
 
   const payload = {
@@ -49,8 +49,8 @@ const logout = async (id) => {
   await Users.findByIdAndUpdate(id, {token: null})
 }
 
-const current = async (contactId, fields) => {
-  return Users.findByIdAndUpdate({ _id: contactId }, fields, { new: true });
+const current = async (contactId) => {
+  return Users.findOne(contactId);
 };
 
 module.exports = {
