@@ -53,6 +53,7 @@ const getById = async (req, res, next) => {
 };
 
 const create = async (req, res, next) => {
+  const {_id} =req.user;
   try {
     const { name, email, phone, favorite } = req.body;
     if (
@@ -65,7 +66,7 @@ const create = async (req, res, next) => {
         message: `missing required name field`,
       });
     } else {
-      const results = await createContact(req.body);
+      const results = await createContact(req.body, _id);
       return res.json({
         status: "success",
         code: 201,
