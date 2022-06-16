@@ -1,18 +1,17 @@
 const express = require("express");
 const router = express.Router();
+const { schemaRegister } = require("../service/schemas/users");
+const { validateRequest } = require("../middlewares/validateRequest");
+const { auth } = require("../middlewares/auth");
 
-const { registerUser } = require("../controller/auth");
+const { registerUser, loginUser, logoutUser, currentUser } = require("../controller/auth");
 
-router.post("/registration", registerUser);
+router.post("/register", registerUser);
 
-// router.get("/:contactId", getById);
+router.post("/login", validateRequest(schemaRegister), loginUser);
 
-// router.post("/", create);
+router.post("/logout", auth, logoutUser);
 
-// router.put("/:contactId", update);
-
-// router.patch("/:contactId/favorite", updateStatus);
-
-// router.delete("/:contactId", remove);
+router.get("/current", currentUser);
 
 module.exports = router;
