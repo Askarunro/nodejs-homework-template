@@ -1,5 +1,5 @@
 const { registration, login, logout, current } = require("../service/auth");
-const { User, schemaRegister } = require("../service/schemas/users");
+const { schemaRegister } = require("../service/schemas/users");
 
 const registerUser = async (req, res, next) => {
   const { email, password } = req.body;
@@ -24,23 +24,20 @@ const registerUser = async (req, res, next) => {
 
 const loginUser = async (req, res, next) => {
   const { email, subscription = "starter" } = req.body;
-  const result = await login(req.body);
-  if (!result) {
+  try {
+    const result = await login(req.body);
     return res.json({
-      status: "unauthorized",
-      code: 401,
-      message: `Email or password is wrong`,
+      status: "success",
+      code: 200,
+      token: result,
+      user: {
+        email: email,
+        subscription: subscription,
+      },
     });
+  } catch (e) {
+    next(e);
   }
-  return res.json({
-    status: "success",
-    code: 200,
-    token: result,
-    user: {
-      email: email,
-      subscription: subscription,
-    },
-  });
 };
 
 const logoutUser = async (req, res, next) => {
@@ -54,8 +51,15 @@ const logoutUser = async (req, res, next) => {
 
 const currentUser = async (req, res, next) => {
   try {
-    await logout(req.user._id);
-    res.sendStatus(204);
+    await current(req.user._id);
+    return res.json({
+      status: "success",
+      code: 200,
+      user: {
+        email: req.user.email,
+        subscription: req.user.subscription,
+      },
+    });
   } catch (e) {
     next(e);
   }
