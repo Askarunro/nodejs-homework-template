@@ -17,14 +17,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/v1/contacts", contactsRouter);
 app.use("/api/users", authRouter);
 
-app.use((_, res, __) => {
-  res.status(404).json({
-    status: 'error',
-    code: 404,
-    message: 'Use api on routes: /api/v1/contacts',
-    data: 'Not found',
-  })
-})
+// app.use((_, res, __) => {
+//   res.status(404).json({
+//     status: 'error',
+//     code: 404,
+//     message: 'Use api on routes: /api/v1/contacts',
+//     data: 'Not found',
+//   })
+// })
 
 // app.use((err, req, res, next) => {
 //   // console.log(err.stack)
@@ -36,6 +36,9 @@ app.use((_, res, __) => {
 //   })
 // })
 
+app.use((req, res, next) => {
+  next({status: 404, message: "Not Found"});
+});
 
 app.use((err, req, res, next) => {
   const { status = 500, message = "Internal Server Error" } = err;
