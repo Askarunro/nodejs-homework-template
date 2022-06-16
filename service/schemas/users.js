@@ -7,6 +7,11 @@ const schemaRegister = Joi.object({
     subscription: Joi.string().min(3).max(8),
   });
 
+  const schemaLogin = Joi.object({
+    password: Joi.string().min(3).max(30).required(),
+    email: Joi.string().email().required(),
+  });
+
 const users = new Schema({
     password: {
       type: String,
@@ -27,4 +32,4 @@ const users = new Schema({
 
   const Users = model("users", users);
 
-module.exports = {Users, schemaRegister};
+module.exports = {Users, schemaRegister, schemaLogin};
