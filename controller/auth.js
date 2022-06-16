@@ -46,12 +46,19 @@ const loginUser = async (req, res, next) => {
 const logoutUser = async (req, res, next) => {
   try {
     await logout(req.user._id);
-    res.sendStatus(204)
+    res.sendStatus(204);
   } catch (e) {
     next(e);
   }
 };
 
-const currentUser = async () => {};
+const currentUser = async (req, res, next) => {
+  try {
+    await logout(req.user._id);
+    res.sendStatus(204);
+  } catch (e) {
+    next(e);
+  }
+};
 
 module.exports = { registerUser, loginUser, logoutUser, currentUser };
