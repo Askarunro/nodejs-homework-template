@@ -1,15 +1,6 @@
-const {
-  getAllContacts,
-  getContactById,
-  createContact,
-  updateContact,
-  removeContact,
-} = require("../service");
+const { getAllContacts, getContactById, createContact, updateContact, removeContact } = require("../service");
 
-const {
-  schemaUpdate,
-  schemaUpdateFavorite,
-} = require("../service/schemas/contacts");
+const { schemaUpdate, schemaUpdateFavorite } = require("../service/schemas/contacts");
 
 const get = async (req, res, next) => {
   try {
@@ -53,19 +44,17 @@ const getById = async (req, res, next) => {
 };
 
 const create = async (req, res, next) => {
+  const { _id } = req.user;
   try {
-    const { name, email, phone, favorite } = req.body;
-    if (
-      !name || !email || !phone ||
-      schemaUpdate.validate(req.body).error
-    ) {
+    const { name, email, phone } = req.body;
+    if (!name || !email || !phone || schemaUpdate.validate(req.body).error) {
       res.status(400).json({
         status: "error",
         code: 400,
         message: `missing required name field`,
       });
     } else {
-      const results = await createContact(req.body);
+      const results = await createContact(req.body, _id);
       return res.json({
         status: "success",
         code: 201,
@@ -75,7 +64,6 @@ const create = async (req, res, next) => {
       });
     }
   } catch (e) {
-    console.error(e);
     next(e);
   }
 };
@@ -98,7 +86,6 @@ const remove = async (req, res, next) => {
         data: "Not Found",
       });
   } catch (e) {
-    console.error(e);
     next(e);
   }
 };
@@ -108,10 +95,7 @@ const update = async (req, res, next) => {
   const { name, email, phone, favorite } = req.body;
 
   try {
-    if (
-      Object.keys(req.body).length === 0 ||
-      schemaUpdate.validate(req.body).error
-    ) {
+    if (Object.keys(req.body).length === 0 || schemaUpdate.validate(req.body).error) {
       return res.status(400).json({
         status: "error",
         code: 400,
@@ -139,7 +123,6 @@ const update = async (req, res, next) => {
       });
     }
   } catch (e) {
-    console.error(e);
     next(e);
   }
 };
@@ -171,7 +154,6 @@ const updateStatus = async (req, res, next) => {
       });
     }
   } catch (e) {
-    console.error(e);
     next(e);
   }
 };
