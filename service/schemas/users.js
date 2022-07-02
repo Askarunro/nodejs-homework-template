@@ -1,6 +1,6 @@
 const {Schema, model} = require('mongoose');
 const Joi = require("joi");
-var gravatar = require('gravatar');
+const gravatar = require('gravatar');
 
 const schemaRegister = Joi.object({
     password: Joi.string().min(3).max(30).required(),
