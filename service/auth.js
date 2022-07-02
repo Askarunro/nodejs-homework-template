@@ -18,11 +18,11 @@ const registration = async (email, password) => {
 const login = async ({ email, password }) => {
   const user = await Users.findOne({ email: email });
   if (!user) {
-    throw new ValidationError(401, 'Email or password is wrong');
+    throw new ValidationError(401, "Email or password is wrong");
   }
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) {
-    throw new ValidationError(401, 'Email or password is wrong');
+    throw new ValidationError(401, "Email or password is wrong");
   }
 
   const payload = {
@@ -46,11 +46,16 @@ const authenticateUser = async (token) => {
 };
 
 const logout = async (id) => {
-  await Users.findByIdAndUpdate(id, {token: null})
-}
+  await Users.findByIdAndUpdate(id, { token: null });
+};
 
 const current = async (contactId) => {
   return Users.findOne(contactId);
+};
+
+const update = async (id, data) => {
+  console.log(data);
+  await Users.findByIdAndUpdate(id, data, { new: true });
 };
 
 module.exports = {
@@ -59,4 +64,5 @@ module.exports = {
   logout,
   current,
   authenticateUser,
+  update,
 };
