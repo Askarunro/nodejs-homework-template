@@ -17,6 +17,9 @@ const registration = async (email, password) => {
 
 const login = async ({ email, password }) => {
   const user = await Users.findOne({ email: email });
+  if(user && !user.verify){
+    throw new ValidationError(401, "Please confirm your email");
+  }
   if (!user) {
     throw new ValidationError(401, "Email or password is wrong");
   }
@@ -54,8 +57,11 @@ const current = async (contactId) => {
 };
 
 const update = async (id, data) => {
-  console.log(data);
-  await Users.findByIdAndUpdate(id, data, { new: true });
+  return Users.findByIdAndUpdate(id, data, { new: true });
+};
+
+const find = async (filters) => {
+ return Users.findOne(filters);
 };
 
 module.exports = {
@@ -65,4 +71,5 @@ module.exports = {
   current,
   authenticateUser,
   update,
+  find,
 };
