@@ -1,5 +1,6 @@
 const {Schema, model} = require('mongoose');
 const Joi = require("joi");
+const gravatar = require('gravatar');
 
 const schemaRegister = Joi.object({
     password: Joi.string().min(3).max(30).required(),
@@ -26,6 +27,12 @@ const users = new Schema({
       type: String,
       enum: ["starter", "pro", "business"],
       default: "starter"
+    },
+    avatarURL: {
+      type: String,
+      default: function(){
+        return gravatar.url(this.email,{}, true)
+      }
     },
     token: String
   })

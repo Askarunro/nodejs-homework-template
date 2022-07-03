@@ -1,14 +1,7 @@
 const { PORT_CONNECT, MONGO_URL } = require("./helpers/env");
 const app = require("./app");
-// const express = require("express");
-// const cors = require("cors");
+
 const mongoose = require("mongoose");
-
-// app.use(express.json());
-// app.use(cors());
-
-// const routerApi = require("./api");
-// app.use("/api", routerApi);
 
 const PORT = PORT_CONNECT || 3000;
 const uriDb = MONGO_URL;

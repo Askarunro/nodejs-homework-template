@@ -1,4 +1,6 @@
-const { registration, login, logout, current } = require("../service/auth");
+const { registration, login, logout, current, update } = require("../service/auth");
+const { uploadImage } = require("../service/image");
+
 const { schemaRegister } = require("../service/schemas/users");
 
 const registerUser = async (req, res, next) => {
@@ -65,4 +67,23 @@ const currentUser = async (req, res, next) => {
   }
 };
 
-module.exports = { registerUser, loginUser, logoutUser, currentUser };
+const avatarsUser = async (req, res, next) => {
+  try {
+    const { _id: id } = req.user;
+    const avatarURL = await uploadImage(id, req.file);
+    const user = await update(id, avatarURL);
+    return res.json({
+      status: "success",
+      code: 200,
+      user: {
+        email: req.user.email,
+        subscription: req.user.subscription,
+        avatar: avatarURL,
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
+module.exports = { registerUser, loginUser, logoutUser, currentUser, avatarsUser };
